@@ -153,17 +153,18 @@ def optimize_path(defualt_path: list[tuple[int, int]]) -> list[tuple[int, int]] 
     return optimal_path
 
 
-mappy = generate_map()
-default_path = find_path(mappy)
-opt = optimize_path(default_path)
+if __name__ == '__main__':
+    mappy = generate_map()
+    default_path = find_path(mappy)
+    opt = optimize_path(default_path)
 
-plt.imshow(mappy, cmap='binary')
-if default_path:
-    path = numpy.array(default_path)
-    opt = numpy.array(opt)
-    plt.plot(path[:, 1], path[:, 0], color='red')
-    plt.plot(opt[:, 1], opt[:, 0], color='blue')
-    plt.title('Маршрут найден!')
-else:
-    plt.title("Маршрут не найден!")
-plt.show()
+    plt.imshow(mappy, cmap='binary')
+    if default_path:
+        path = numpy.array(default_path)
+        opt = numpy.array(opt)
+        plt.plot(path[:, 1], path[:, 0], color='red')
+        plt.plot(opt[:, 1], opt[:, 0], color='blue')
+        plt.title('Маршрут найден!')
+    else:
+        plt.title("Маршрут не найден!")
+    plt.show()
