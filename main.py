@@ -70,6 +70,8 @@ def find_path(
     assert 0 <= start[1] <= robo_map.shape[1] - 1
     assert 0 <= target[0] <= robo_map.shape[0] - 1
     assert 0 <= target[1] <= robo_map.shape[1] - 1
+    if robo_map[target] == 1:
+        return None
 
     # Определяем необходимые переменные для работы алгоритма
     to_be_processed = []  # Куча с узлами, ожидающими обработки
@@ -121,13 +123,46 @@ def find_path(
                         heapq.heappush(to_be_processed, (f_len[neighbor], neighbor))
 
 
+def optimize_path(defualt_path: list[tuple[int, int]]) -> list[tuple[int, int]] | None:
+    """
+    Функция оптимизирует путь робота.
+    Основная идея заключается в добавлении "срезок" под 45 граусов, позволяя уменьшать количество поротов робота.
+
+    :param defualt_path: list[tuple[int, int]] - Исходный список точек маршрута.
+    :return: list[tuple[int, int]] - Оптимизированный список точек маршрута.
+    """
+    # Валидация исходного пути
+    if defualt_path is None or len(defualt_path) < 3:
+        return defualt_path
+
+    # Объявляем массив для нового пути
+    optimal_path = []
+    is_next_bad = False  # Флаг, показывает что следующий элемент следует проигнорировать
+
+    # В цикле просто обходим все точки пути и смотрим есть ли диагональ, если находим, пропускаем промежуточный элемент
+    for i in range(len(defualt_path) - 2):
+        if not is_next_bad:
+            if defualt_path[i + 2][0] - defualt_path[i][0] == 1 and defualt_path[i + 2][1] - defualt_path[i][1] == 1:
+                optimal_path.append(defualt_path[i])
+                is_next_bad = True
+            else:
+                optimal_path.append(defualt_path[i])
+        else:
+            is_next_bad = False
+
+    return optimal_path
+
+
 mappy = generate_map()
-path = find_path(mappy)
+default_path = find_path(mappy)
+opt = optimize_path(default_path)
 
 plt.imshow(mappy, cmap='binary')
-if path:
-    path = numpy.array(path)
+if default_path:
+    path = numpy.array(default_path)
+    opt = numpy.array(opt)
     plt.plot(path[:, 1], path[:, 0], color='red')
+    plt.plot(opt[:, 1], opt[:, 0], color='blue')
     plt.title('Маршрут найден!')
 else:
     plt.title("Маршрут не найден!")
