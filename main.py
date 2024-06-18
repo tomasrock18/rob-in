@@ -150,6 +150,9 @@ def optimize_path(defualt_path: list[tuple[int, int]]) -> list[tuple[int, int]] 
         else:
             is_next_bad = False
 
+    # Не забываем про последний элемент
+    optimal_path.append(defualt_path[-1])
+
     return optimal_path
 
 
@@ -162,8 +165,9 @@ if __name__ == '__main__':
     if default_path:
         path = numpy.array(default_path)
         opt = numpy.array(opt)
-        plt.plot(path[:, 1], path[:, 0], color='red')
-        plt.plot(opt[:, 1], opt[:, 0], color='blue')
+        plt.plot(path[:, 1], path[:, 0], color='red', label="Исходный путь")
+        plt.plot(opt[:, 1], opt[:, 0], color='blue', label="Оптимизированный путь")
+        plt.legend()
         plt.title('Маршрут найден!')
     else:
         plt.title("Маршрут не найден!")

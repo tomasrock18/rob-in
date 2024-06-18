@@ -6,7 +6,6 @@
 ```shell
 git clone https://github.com/tomasrock18/rob-in.git
 cd rob-in
-git checkout dev
 pip install -r requirements.txt
 ```
 
